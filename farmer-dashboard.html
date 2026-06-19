@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Rental Hub - Farmer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-nav {
+            background-color: #1e7e34;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            min-height: calc(100vh - 56px);
+            border-right: 1px solid #dee2e6;
+        }
+        .nav-link-custom {
+            color: #333;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .nav-link-custom:hover, .nav-link-custom.active {
+            background-color: #e8f5e9;
+            color: #198754;
+        }
+        .machine-card-dash {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .machine-card-dash:hover {
+            transform: scale(1.02);
+        }
+        .img-placeholder {
+            height: 160px;
+            background-color: #f1f8e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. TOP NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-nav sticky-top shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental (Farmer)</a>
+            
+            <div class="ms-auto d-flex align-items-center">
+                <div class="dropdown me-3">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold" type="button" id="farmerLangDropdown" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-globe me-1"></i> Language / भाषा
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="changeFarmerLanguage('en')">English</a></li>
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="changeFarmerLanguage('mr')">मराठी</a></li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-danger btn-sm fw-bold" id="btnLogout">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> <span data-farm-key="btnLogoutText">लॉगआउट</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN LAYOUT CONTAINER -->
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- SIDEBAR NAVIGATION -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse d-md-flex flex-column">
+                <div class="position-sticky">
+                    <a href="#" class="nav-link-custom active" id="linkBrowse" data-farm-key="sideBrowse"><i class="fa-solid fa-magnifying-glass me-2"></i>यंत्रे शोधा</a>
+                    <a href="#" class="nav-link-custom" id="linkMyBookings" data-farm-key="sideBookings"><i class="fa-solid fa-list-check me-2"></i>माझे बुकिंग्स</a>
+                </div>
+            </nav>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
+                
+                <!-- LIVE AGRI WEATHER WIDGET SECTION -->
+                <div class="card border-0 shadow-sm rounded-3 mb-4 text-white" style="background: linear-gradient(135deg, #2e7d32, #155724);">
+                    <div class="card-body d-flex align-items-center justify-content-between py-3">
+                        <div>
+                            <h6 class="mb-1 text-light small fw-bold" data-farm-key="weatherTitle"><i class="fa-solid fa-location-dot me-1"></i> चालू हवामान (कोल्हापूर परिसर)</h6>
+                            <h3 class="mb-0 fw-bold" id="weatherTemp">--°C</h3>
+                        </div>
+                        <div class="text-end">
+                            <span class="fs-4 mb-0 d-block" id="weatherIcon"><i class="fa-solid fa-cloud-sun"></i></span>
+                            <span class="small fw-semibold" id="weatherStatus" data-farm-key="weatherLoading">माहिती लोड होत आहे...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2 fw-bold text-dark" id="dashTitle" data-farm-key="dashTitle">उपलब्ध शेती अवजारे</h1>
+                    <p class="text-muted mb-0" id="welcomeUser"></p>
+                </div>
+
+                <!-- MACHINERY GRID CONTAINER -->
+                <div class="row g-4" id="machineryGrid">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card machine-card-dash h-100 shadow-sm">
+                            <div class="img-placeholder"><i class="fa-solid fa-tractor fa-3x text-success"></i></div>
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">John Deere 5050 D</h5>
+                                <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1"></i> कोल्हापूर (Kolhapur)</p>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <span class="fw-bold text-success">₹800 / hr</span>
+                                    <button class="btn btn-success btn-sm px-3 fw-bold" data-farm-key="btnBook" data-bs-toggle="modal" data-bs-target="#bookingModal">बुक करा</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MY BOOKINGS SECTION -->
+                <div id="myBookingsSection" class="d-none mt-4">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col" data-farm-key="thMachine">यंत्राचे नाव</th>
+                                            <th scope="col" data-farm-key="thDate">तारीख</th>
+                                            <th scope="col" data-farm-key="thHours">एकूण तास</th>
+                                            <th scope="col" data-farm-key="thRent">अंदाजे भाडे</th>
+                                            <th scope="col" data-farm-key="thStatus">स्टेटस (Status)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="farmerBookingsTable">
+                                        <!-- Real-time dynamic entries from farmer.js load here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- 3. BOOKING POP-UP MODAL -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold" data-farm-key="modalTitle">अवजार बुकिंग फॉर्म</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" data-farm-key="lblDate">कोणत्या तारखेला हवे आहे?</label>
+                            <input type="date" class="form-control" id="bookingDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" data-farm-key="lblHours">किती तासांसाठी हवे आहे?</label>
+                            <input type="number" class="form-control" id="bookingHours" min="1" required placeholder="उदा. 5">
+                        </div>
+                        <div class="p-3 bg-light rounded mb-3">
+                            <span class="text-muted small" data-farm-key="lblTotalEst">अंदाजे एकूण भाडे:</span>
+                            <h4 class="text-success fw-bold mb-0" id="estimatedCost">₹0</h4>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm" data-farm-key="btnConfirm">बुकिंग निश्चित करा (Confirm)</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. DIGITAL INVOICE BILL POP-UP MODAL -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold" id="invoiceModalTitle" data-farm-key="invModalTitle"><i class="fa-solid fa-file-invoice-dollar me-2"></i>डिजिटल पावती / Invoice</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-3">
+                        <h4 class="fw-bold text-success mb-1"><i class="fa-solid fa-tractor"></i> Agro-Rental Hub</h4>
+                        <p class="text-muted small" id="invSubTitle" data-farm-key="invSubTitle">प्रकल्प डिजिटल शेती पावती</p>
+                    </div>
+                    <hr>
+                    <div class="mb-3 small">
+                        <p class="mb-1"><strong data-farm-key="invLabelFarmer">शेतकऱ्याचे नाव:</strong> <span id="invFarmerName">--</span></p>
+                        <p class="mb-1"><strong data-farm-key="invLabelMachine">यंत्राचे नाव:</strong> <span id="invMachineName">--</span></p>
+                        <p class="mb-1"><strong data-farm-key="invLabelDate">बुकिंग तारीख:</strong> <span id="invDate">--</span></p>
+                    </div>
+                    <table class="table table-bordered table-sm small text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th data-farm-key="invThDesc">तपशील</th>
+                                <th data-farm-key="invThHours">एकूण तास</th>
+                                <th data-farm-key="invThTotal">एकूण भाडे</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="invMachineDetail" class="fw-semibold">--</td>
+                                <td id="invHours">0 Hrs</td>
+                                <td id="invTotal" class="text-success fw-bold">₹0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-success text-center py-2 small fw-bold mb-0" id="invAlertMessage" data-farm-key="invAlertStatus">
+                        <i class="fa-solid fa-circle-check me-1"></i> व्हेंडरद्वारे व्यवहार मंजूर झाला आहे!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100 fw-bold" data-bs-dismiss="modal" data-farm-key="invBtnClose">बंद करा</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Inline Translation Dictionary Script -->
+    <script>
+        const farmerTranslations = {
+            en: {
+                btnLogoutText: "Logout",
+                sideBrowse: "Find Machinery",
+                sideBookings: "My Bookings",
+                dashTitle: "Available Agri Machinery",
+                btnBook: "Book Now",
+                modalTitle: "Machinery Booking Form",
+                lblDate: "Required Date?",
+                lblHours: "Number of Hours?",
+                lblTotalEst: "Estimated Total Rent:",
+                btnConfirm: "Confirm Booking",
+                thMachine: "Machinery Name",
+                thDate: "Date Required",
+                thHours: "Total Hours",
+                thRent: "Total Rent",
+                thStatus: "Status",
+                weatherTitle: "Live Weather (Kolhapur Region)",
+                weatherLoading: "Loading weather data...",
+                invModalTitle: "Digital Receipt / Invoice",
+                invSubTitle: "Project Digital Agri Receipt",
+                invLabelFarmer: "Farmer Name:",
+                invLabelMachine: "Machine Name:",
+                invLabelDate: "Booking Date:",
+                invThDesc: "Description",
+                invThHours: "Total Hours",
+                invThTotal: "Total Rent",
+                invAlertStatus: "Transaction approved by vendor!",
+                invBtnClose: "Close"
+            },
+            mr: {
+                btnLogoutText: "लॉगआऊट",
+                sideBrowse: "यंत्रे शोधा",
+                sideBookings: "माझे बुकिंग्स",
+                dashTitle: "उपलब्ध शेती अवजारे",
+                btnBook: "बुक करा",
+                modalTitle: "अवजार बुकिंग फॉर्म",
+                lblDate: "कोणत्या तारखेला हवे आहे?",
+                lblHours: "किती तासांसाठी हवे आहे?",
+                lblTotalEst: "अंदाजे एकूण भाडे:",
+                btnConfirm: "बुकिंग निश्चित करा (Confirm)",
+                thMachine: "यंत्राचे नाव",
+                thDate: "तारीख",
+                thHours: "एकूण तास",
+                thRent: "अंदाजे भाडे",
+                thStatus: "स्टेटस (Status)",
+                weatherTitle: "चालू हवामान (कोल्हापूर परिसर)",
+                weatherLoading: "माहिती लोड होत आहे...",
+                invModalTitle: "डिजिटल पावती / Invoice",
+                invSubTitle: "प्रकल्प डिजिटल शेती पावती",
+                invLabelFarmer: "शेतकऱ्याचे नाव:",
+                invLabelMachine: "यंत्राचे नाव:",
+                invLabelDate: "बुकिंग तारीख:",
+                invThDesc: "तपशील",
+                invThHours: "एकूण तास",
+                invThTotal: "एकूण भाडे",
+                invAlertStatus: "व्हेंडरद्वारे व्यवहार मंजूर झाला आहे!",
+                invBtnClose: "बंद करा"
+            }
+        };
+
+        window.changeFarmerLanguage = function(lang) {
+            localStorage.setItem("selectedLang", lang);
+
+            document.querySelectorAll("[data-farm-key]").forEach(element => {
+                const key = element.getAttribute("data-farm-key");
+                if (farmerTranslations[lang] && farmerTranslations[lang][key]) {
+                    element.textContent = farmerTranslations[lang][key];
+                }
+            });
+            
+            const dashTitle = document.getElementById("dashTitle");
+            const isBookingsActive = document.getElementById("linkMyBookings").classList.contains("active");
+            if (dashTitle) {
+                if (isBookingsActive) {
+                    dashTitle.textContent = lang === "en" ? "My Bookings Record" : "माझे बुकिंग्स रेकॉर्ड";
+                } else {
+                    dashTitle.textContent = lang === "en" ? "Available Agri Machinery" : "उपलब्ध शेती अवजारे";
+                }
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedLang = localStorage.getItem("selectedLang") || "mr";
+            changeFarmerLanguage(savedLang);
+        });
+    </script>
+    <script type="module" src="farmer.js"></script>
+</body>
+</html>

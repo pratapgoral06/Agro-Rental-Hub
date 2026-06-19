@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Rental Hub - Vendor Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .vendor-nav {
+            background-color: #198754;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            min-height: calc(100vh - 56px);
+            border-right: 1px solid #dee2e6;
+        }
+        .nav-link-custom {
+            color: #333;
+            font-weight: 500;
+            padding: 12px 20px;
+            display: block;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .nav-link-custom:hover, .nav-link-custom.active {
+            background-color: #e8f5e9;
+            color: #198754;
+        }
+        .stats-card {
+            border: none;
+            border-left: 4px solid #198754;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. TOP NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark vendor-nav sticky-top shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental (Vendor)</a>
+            
+            <div class="ms-auto d-flex align-items-center">
+                <!-- Language Selector Dropdown -->
+                <div class="dropdown me-3">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold" type="button" id="vendorLangDropdown" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-globe me-1"></i> Language / भाषा
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="changeVendorLanguage('en')">English</a></li>
+                        <li><a class="dropdown-item fw-bold" href="#" onclick="changeVendorLanguage('mr')">मराठी</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Logout Button -->
+                <button class="btn btn-danger btn-sm fw-bold" id="btnVendorLogout">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> <span data-vend-key="btnLogoutText">लॉगआऊट</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN LAYOUT CONTAINER -->
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- SIDEBAR NAVIGATION -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse d-md-flex flex-column">
+                <div class="position-sticky">
+                    <a href="#" class="nav-link-custom active" data-vend-key="sideManage"><i class="fa-solid fa-list me-2"></i>बुकिंग्ज व्यवस्थापन</a>
+                    <a href="#" class="nav-link-custom" data-vend-key="sideAddMachine" data-bs-toggle="modal" data-bs-target="#addMachineModal"><i class="fa-solid fa-plus me-2"></i>नवीन यंत्र जोडा</a>
+                </div>
+            </nav>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2 fw-bold text-dark" data-vend-key="dashTitle">आलेले बुकिंग रिक्वेस्ट</h1>
+                </div>
+
+                <!-- BOOKING REQUESTS TABLE -->
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" data-vend-key="thFarmer">शेतकऱ्याचे नाव</th>
+                                        <th scope="col" data-vend-key="thMachine">यंत्राचे नाव</th>
+                                        <th scope="col" data-vend-key="thDate">तारीख</th>
+                                        <th scope="col" data-vend-key="thHours">एकूण तास</th>
+                                        <th scope="col" data-vend-key="thStatus">स्टेटस</th>
+                                        <th scope="col" data-vend-key="thAction">कृती (Action)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vendorBookingsTable">
+                                    <!-- Placeholder Row for UI Reference -->
+                                    <tr>
+                                        <td class="fw-semibold">आनंद राव (Anand Rao)</td>
+                                        <td>Mahindra Tractor 45 HP</td>
+                                        <td>25 जून 2026</td>
+                                        <td>5 Hrs</td>
+                                        <td><span class="badge bg-warning text-dark" data-vend-key="statusPending">प्रलंबित</span></td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm fw-bold me-1"><i class="fa-solid fa-check"></i></button>
+                                            <button class="btn btn-danger btn-sm fw-bold"><i class="fa-solid fa-xmark"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- 3. ADD MACHINERY POP-UP MODAL -->
+    <div class="modal fade" id="addMachineModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold" data-vend-key="modalTitle">नवीन अवजार जोडा</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMachineForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" data-vend-key="lblMachineName">यंत्राचे नाव (Model Name)</label>
+                            <input type="text" class="form-control" id="machineName" required placeholder="उदा. Shaktiman Rotavator">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" data-vend-key="lblCategory">प्रकार (Category)</label>
+                            <select class="form-select" id="machineCategory" required>
+                                <option value="Tractor">Tractor</option>
+                                <option value="Rotavator">Rotavator</option>
+                                <option value="Drone">Drone</option>
+                                <option value="Harvester">Harvester</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" data-vend-key="lblPrice">भाडे प्रति तास (Price Per Hour)</label>
+                            <input type="number" class="form-control" id="machinePrice" min="1" required placeholder="₹">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm" data-vend-key="btnSubmitMachine">यंत्र समाविष्ट करा (Add Machine)</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Inline Translation Dictionary Script -->
+    <script>
+        /**
+         * Language translation configurations for Vendor Dashboard
+         */
+        const vendorTranslations = {
+            en: {
+                btnLogoutText: "Logout",
+                sideManage: "Manage Bookings",
+                sideAddMachine: "Add New Machine",
+                dashTitle: "Incoming Booking Requests",
+                thFarmer: "Farmer Name",
+                thMachine: "Machinery Name",
+                thDate: "Date Required",
+                thHours: "Total Hours",
+                thStatus: "Status",
+                thAction: "Action",
+                statusPending: "Pending",
+                modalTitle: "Add New Agri Machinery",
+                lblMachineName: "Machinery / Model Name",
+                lblCategory: "Select Category",
+                lblPrice: "Rent Price Per Hour",
+                btnSubmitMachine: "Add Machinery Details"
+            },
+            mr: {
+                btnLogoutText: "लॉगआऊट",
+                sideManage: "बुकिंग्ज व्यवस्थापन",
+                sideAddMachine: "नवीन यंत्र जोडा",
+                dashTitle: "आलेले बुकिंग रिक्वेस्ट",
+                thFarmer: "शेतकऱ्याचे नाव",
+                thMachine: "यंत्राचे नाव",
+                thDate: "तारीख",
+                thHours: "एकूण तास",
+                thStatus: "स्टेटस",
+                thAction: "कृती (Action)",
+                statusPending: "प्रलंबित",
+                modalTitle: "नवीन अवजार जोडा",
+                lblMachineName: "यंत्राचे नाव (Model Name)",
+                lblCategory: "प्रकार (Category)",
+                lblPrice: "भाडे प्रति तास (Price Per Hour)",
+                btnSubmitMachine: "यंत्र समाविष्ट करा (Add Machine)"
+            }
+        };
+
+        /**
+         * Switches dashboard language state on click events
+         * @param {string} lang - Chosen language keyword ('en' or 'mr')
+         */
+        window.changeVendorLanguage = function(lang) {
+            localStorage.setItem("selectedLang", lang);
+
+            document.querySelectorAll("[data-vend-key]").forEach(element => {
+                const key = element.getAttribute("data-vend-key");
+                if (vendorTranslations[lang] && vendorTranslations[lang][key]) {
+                    element.textContent = vendorTranslations[lang][key];
+                }
+            });
+        };
+
+        // Initialize display configuration upon full content load
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedLang = localStorage.getItem("selectedLang") || "mr";
+            changeVendorLanguage(savedLang);
+        });
+    </script>
+    <!-- DIGITAL INVOICE BILL FOR VENDOR -->
+<div class="modal fade" id="vendorInvoiceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2"></i>डिजिटल पावती (व्हेंडर रेकॉर्ड)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <h4 class="fw-bold text-success mb-1"><i class="fa-solid fa-tractor"></i> Agro-Rental Hub</h4>
+                    <p class="text-muted small">व्हेंडर व्यवहार पावती प्रपत्र</p>
+                </div>
+                <hr>
+                <div class="mb-3 small">
+                    <p class="mb-1"><strong>शेतकऱ्याचे नाव:</strong> <span id="vInvFarmerName">--</span></p>
+                    <p class="mb-1"><strong>यंत्राचे नाव:</strong> <span id="vInvMachineName">--</span></p>
+                    <p class="mb-1"><strong>बुकिंग तारीख:</strong> <span id="vInvDate">--</span></p>
+                </div>
+                <table class="table table-bordered table-sm small text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>तपशील</th>
+                            <th>एकूण तास</th>
+                            <th>एकूण जमा रक्कम</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="vInvMachineDetail" class="fw-semibold">--</td>
+                            <td id="vInvHours">0 Hrs</td>
+                            <td id="vInvTotal" class="text-success fw-bold">₹0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-success text-center py-2 small fw-bold mb-0">
+                    <i class="fa-solid fa-circle-check me-1"></i> तुम्ही हे बुकिंग मंजूर केले आहे!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary w-100 fw-bold" data-bs-dismiss="modal">बंद करा</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <script type="module" src="vendor.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Rental Hub - Modern Farming, Rental Made Easy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .hero-section {
+            background-color: #f1f8e9;
+            padding: 80px 0;
+            border-bottom: 3px solid #c8e6c9;
+        }
+        .machine-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+        }
+        .machine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+        .machine-img-container {
+            height: 200px;
+            background-color: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .machine-img-container i {
+            font-size: 4rem;
+            color: #81c784;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active fw-semibold px-3" href="#" data-lang-key="navHome">होम</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold px-3" href="#" data-lang-key="navBrowse">यंत्रे पहा</a></li>
+                    
+                    <li class="nav-item dropdown me-2">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold px-3" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-globe me-1"></i> Language / भाषा
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item fw-bold" href="#" onclick="changeLanguage('en')">English</a></li>
+                            <li><a class="dropdown-item fw-bold" href="#" onclick="changeLanguage('mr')">मराठी</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-warning text-dark fw-bold px-4 shadow-sm" href="login.html" data-lang-key="navLogin">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>लॉगिन / रजिस्टर
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section text-center text-md-start">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1 class="display-4 fw-bold text-success mb-3" data-lang-key="heroTitle">आधुनिक शेती, आता सोपे झाले भाडे!</h1>
+                    <p class="lead text-muted mb-4" data-lang-key="heroDesc">लाखोंची गुंतवणूक करण्याची गरज नाही. ट्रॅक्टर्स, रोटाव्हेटर्स आणि आधुनिक ड्रोन्स भाड्याने मिळवा थेट तुमच्या मोबाईलवरून, अगदी वाजवी दरात.</p>
+                    <div class="d-grid d-md-flex gap-3">
+                        <button  class="btn btn-success btn-lg px-4 shadow" data-lang-key="btnFind"><i class="fa-solid fa-magnifying-glass me-2"></i>यंत्रे शोधा</button>
+                        <a href="login.html" class="btn btn-outline-success btn-lg px-4" data-lang-key="btnRentOut">माझे अवजार भाड्याने द्या</a>
+                    </div>
+                </div>
+                <div class="col-md-5 text-center d-none d-md-block">
+                    <i class="fa-solid fa-wheat-awn text-success opacity-25" style="font-size: 15rem;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark" data-lang-key="sectionTitle">उपलब्ध प्रमुख यंत्रे</h2>
+            <p class="text-muted" data-lang-key="sectionSubtitle">तुमच्या शेतीसाठी लागणारे सर्वोत्तम पर्याय निवडा</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card machine-card h-100 shadow-sm">
+                    <div class="machine-img-container">
+                        <i class="fa-solid fa-tractor"></i>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2" data-lang-key="statusAvailable">उपलब्ध</span>
+                        <h5 class="card-title fw-bold">Mahindra Tractor 45 HP</h5>
+                        <p class="card-text text-muted mb-3">नांगरणी, पेरणी आणि अवजड वाहतुकीसाठी अत्यंत कार्यक्षम ट्रॅक्टर.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <h5 class="text-success fw-bold mb-0">R-Rate</h5> <button class="btn btn-sm btn-outline-success px-3 fw-semibold" data-lang-key="btnBookNow">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card machine-card h-100 shadow-sm">
+                    <div class="machine-img-container">
+                        <i class="fa-solid fa-gears"></i>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2" data-lang-key="statusAvailable">उपलब्ध</span>
+                        <h5 class="card-title fw-bold">Shaktiman Rotavator</h5>
+                        <p class="card-text text-muted mb-3">शेतातील माती बारीक करून भुसभुशीत आणि लागवडीयोग्य करण्यासाठी उत्तम.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <h5 class="text-success fw-bold mb-0">R-Rate</h5>
+                            <button class="btn btn-sm btn-outline-success px-3 fw-semibold" data-lang-key="btnBookNow">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card machine-card h-100 shadow-sm">
+                    <div class="machine-img-container">
+                        <i class="fa-solid fa-helicopter"></i>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2" data-lang-key="statusAvailable">उपलब्ध</span>
+                        <h5 class="card-title fw-bold">Agriculture Spraying Drone</h5>
+                        <p class="card-text text-muted mb-3">कमी वेळेत आणि कमी औषधात अचूक फवारणी करण्यासाठी आधुनिक ड्रोन तंत्रज्ञान.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <h5 class="text-success fw-bold mb-0">R-Rate</h5>
+                            <button class="btn btn-sm btn-outline-success px-3 fw-semibold" data-lang-key="btnBookNow">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-2 fw-semibold" data-lang-key="footerText">Agro-Rental Hub - शेतकरी आणि यंत्रधारकांना जोडणारा डिजिटल प्लॅटफॉर्म</p>
+            <p class="small text-muted mb-0" data-lang-key="footerCopy">© 2026 सर्व हक्क सुरक्षित. कोल्हापूर, महाराष्ट्र.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="lang.js"></script>
+</body>
+</html>

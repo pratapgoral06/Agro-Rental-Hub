@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Rental Hub - Login & Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f6f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            border: none;
+            border-radius: 15px;
+            max-width: 480px;
+            width: 100%;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #198754;
+        }
+        .nav-pills .nav-link {
+            color: #198754;
+            font-weight: 600;
+        }
+        .lang-switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switch-container">
+        <div class="dropdown">
+            <button class="btn btn-outline-success btn-sm dropdown-toggle fw-bold bg-white shadow-sm" type="button" id="authLangDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-globe me-1"></i> Language / भाषा
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authLangDropdown">
+                <li><a class="dropdown-item fw-bold" href="#" onclick="changeAuthLanguage('en')">English</a></li>
+                <li><a class="dropdown-item fw-bold" href="#" onclick="changeAuthLanguage('mr')">मराठी</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card auth-card shadow-lg p-4 bg-white mt-5">
+        
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-success"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental</h2>
+            <p class="text-muted" data-auth-key="authSubTitle">आपले खाते लॉग इन करा किंवा नवीन खाते तयार करा</p>
+        </div>
+
+        <ul class="nav nav-pills nav-justified mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" data-auth-key="tabLoginHeader">लॉगिन</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab" data-auth-key="tabRegisterHeader">रजिस्टर</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            
+            <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblEmail">ईमेल पत्ता</label>
+                        <input type="email" class="form-control" id="loginEmail" required placeholder="example@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblPassword">पासवर्ड</label>
+                        <input type="password" class="form-control" id="loginPassword" required placeholder="******">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2 shadow-sm" data-auth-key="btnLoginSubmit">प्रवेश करा (Login)</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="pills-register" role="tabpanel">
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblFullName">पूर्ण नाव</label>
+                        <input type="text" class="form-control" id="regName" required placeholder="उदा. प्रताप गोराळ">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblMobile">मोबाईल नंबर</label>
+                        <input type="tel" class="form-control" id="regPhone" required placeholder="9876543210">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblEmail">ईमेल पत्ता</label>
+                        <input type="email" class="form-control" id="regEmail" required placeholder="example@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" data-auth-key="lblPassword">पासवर्ड</label>
+                        <input type="password" class="form-control" id="regPassword" required placeholder="किमान ६ अक्षरे">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold d-block" data-auth-key="lblSelectRole">तुमचा रोल निवडा</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userRole" id="roleFarmer" value="Farmer" checked>
+                            <label class="form-check-label" for="roleFarmer" data-auth-key="optFarmer">मी shetkari aahe (Farmer)</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userRole" id="roleVendor" value="Vendor">
+                            <label class="form-check-label" for="roleVendor" data-auth-key="optVendor">मी यंत्र मालक आहे (Vendor)</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm" data-auth-key="btnRegisterSubmit">नवीन खाते बनवा (Register)</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-decoration-none text-success small fw-semibold" data-auth-key="lnkBackToHome"><i class="fa-solid fa-arrow-left me-1"></i> मुख्य पानावर परत जा</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        /**
+         * Holds configuration translations for UI dictionary
+         */
+        const authTranslations = {
+            en: {
+                authSubTitle: "Log in to your account or create a new one",
+                tabLoginHeader: "Login",
+                tabRegisterHeader: "Register",
+                lblEmail: "Email Address",
+                lblPassword: "Password",
+                btnLoginSubmit: "Login",
+                lblFullName: "Full Name",
+                lblMobile: "Mobile Number",
+                lblSelectRole: "Select Your Role",
+                optFarmer: "I am a Farmer",
+                optVendor: "I am a Machinery Owner (Vendor)",
+                btnRegisterSubmit: "Create Account",
+                lnkBackToHome: "Back to Home Screen"
+            },
+            mr: {
+                authSubTitle: "आपले खाते लॉग इन करा किंवा नवीन खाते तयार करा",
+                tabLoginHeader: "लॉगिन",
+                tabRegisterHeader: "रजिस्टर",
+                lblEmail: "ईमेल पत्ता",
+                lblPassword: "पासवर्ड",
+                btnLoginSubmit: "प्रवेश करा (Login)",
+                lblFullName: "पूर्ण नाव",
+                lblMobile: "मोबाईल नंबर",
+                lblSelectRole: "तुमचा रोल निवडा",
+                optFarmer: "मी शेतकरी आहे (Farmer)",
+                optVendor: "मी यंत्र मालक आहे (Vendor)",
+                btnRegisterSubmit: "नवीन खाते बनवा (Register)",
+                lnkBackToHome: "मुख्य पानावर परत जा"
+            }
+        };
+
+        /**
+         * Switches auth screen language dynamically
+         * @param {string} lang - Language code indicator ('en' or 'mr')
+         */
+        window.changeAuthLanguage = function(lang) {
+            localStorage.setItem("selectedLang", lang);
+
+            document.querySelectorAll("[data-auth-key]").forEach(element => {
+                const key = element.getAttribute("data-auth-key");
+                if (authTranslations[lang] && authTranslations[lang][key]) {
+                    element.textContent = authTranslations[lang][key];
+                }
+            });
+        };
+
+        // Standard event listener to set initial language state on load
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedLang = localStorage.getItem("selectedLang") || "mr";
+            changeAuthLanguage(savedLang);
+        });
+    </script>
+    
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
