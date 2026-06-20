@@ -190,7 +190,7 @@ if (linkBrowse && linkMyBookings) {
     });
 }
 
-// --- 5. LOAD FARMER'S OWN BOOKINGS FROM FIRESTORE ---
+// --- 5. LOAD FARMER'S OWN BOOKINGS FROM FIRESTORE (UPDATED WITH SPINNER CLEARANCE) ---
 function loadFarmerBookings() {
     const farmerBookingsTable = document.getElementById("farmerBookingsTable");
     if (!farmerBookingsTable) return;
@@ -199,6 +199,7 @@ function loadFarmerBookings() {
     const q = query(collection(db, "bookings"), where("farmerUid", "==", currentFarmerUid));
 
     onSnapshot(q, (snapshot) => {
+        // CRITICAL: Clear out the existing loading spinner before rendering rows
         farmerBookingsTable.innerHTML = "";
 
         if (snapshot.empty) {
