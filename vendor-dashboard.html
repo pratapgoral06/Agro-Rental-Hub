@@ -38,6 +38,10 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark vendor-nav sticky-top shadow-sm">
         <div class="container-fluid px-4">
+            <button class="navbar-toggler d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
             <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental (Vendor)</a>
             
             <div class="ms-auto d-flex align-items-center">
@@ -61,7 +65,7 @@
     <div class="container-fluid">
         <div class="row">
             
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse d-md-flex flex-column">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse flex-column bg-white">
                 <div class="position-sticky">
                     <a href="#" class="nav-link-custom active" data-vend-key="sideManage"><i class="fa-solid fa-list me-2"></i>बुकिंग्ज व्यवस्थापन</a>
                     <a href="#" class="nav-link-custom" data-vend-key="sideAddMachine" data-bs-toggle="modal" data-bs-target="#addMachineModal"><i class="fa-solid fa-plus me-2"></i>नवीन यंत्र जोडा</a>
@@ -239,7 +243,7 @@
             });
         };
 
-        // DOM Rendering Init Rig
+        // DOM Rendering Setup Rig
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeVendorLanguage(savedLang);
