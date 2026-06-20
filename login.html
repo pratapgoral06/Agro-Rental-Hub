@@ -10,33 +10,54 @@
         body {
             background-color: #f4f6f8;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
-        .auth-card {
-            border: none;
-            border-radius: 15px;
-            max-width: 480px;
+        /* Left Section Banner Configuration with New Local PNG Image */
+        .left-banner {
+            background: linear-gradient(135deg, rgba(25, 135, 84, 0.4), rgba(0, 0, 0, 0.45)), 
+                        url('image_88681f.png') no-repeat center center;
+            background-size: cover;
+        }
+        /* Centered Authentication Form Wrap Constraints */
+        .auth-container {
+            max-width: 700px;
             width: 100%;
         }
+        /* Tab Navigation Active Toggle Styling */
         .nav-pills .nav-link.active {
             background-color: #198754;
         }
+        /* Tab Navigation Anchor Configuration with Extra Padding and Bold Text */
         .nav-pills .nav-link {
             color: #198754;
-            font-weight: 600;
+            font-weight: 800; /* Super bold tabs */
+            padding: 16px;    /* Increased vertical height for tabs */
+            font-size: 20px;   /* Larger tab font size */
         }
+        /* Floating Locale Selector Coordinates */
         .lang-switch-container {
             position: absolute;
             top: 20px;
             right: 20px;
+            z-index: 1000;
+        }
+        /* Form Label Typography Constraints with Enhanced Weight */
+        .form-label {
+            font-size: 18px;     /* Increased label size */
+            margin-bottom: 10px;
+        }
+        /* Custom styling to make input text look bold and clear */
+        .form-control {
+            font-weight: 600;
+        }
+        .form-control::placeholder {
+            font-weight: bold;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
+    <!-- LANGUAGE SWITCHER DROPDOWN -->
     <div class="lang-switch-container">
         <div class="dropdown">
             <button class="btn btn-outline-success btn-sm dropdown-toggle fw-bold bg-white shadow-sm" type="button" id="authLangDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,82 +70,142 @@
         </div>
     </div>
 
-    <div class="card auth-card shadow-lg p-4 bg-white mt-5">
-        
-        <div class="text-center mb-4">
-            <h2 class="fw-bold text-success"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental</h2>
-            <p class="text-muted" data-auth-key="authSubTitle">आपले खाते लॉग इन करा किंवा नवीन खाते तयार करा</p>
-        </div>
-
-        <ul class="nav nav-pills nav-justified mb-4" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" data-auth-key="tabLoginHeader">लॉगिन</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab" data-auth-key="tabRegisterHeader">रजिस्टर</button>
-            </li>
-        </ul>
-
-        <div class="tab-content" id="pills-tabContent">
+    <!-- MAIN TWO-COLUMN SPLIT LAYOUT -->
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
             
-            <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblEmail">ईमेल पत्ता</label>
-                        <input type="email" class="form-control" id="loginEmail" required placeholder="example@gmail.com">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblPassword">पासवर्ड</label>
-                        <input type="password" class="form-control" id="loginPassword" required placeholder="******">
-                    </div>
-                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2 shadow-sm" data-auth-key="btnLoginSubmit">प्रवेश करा (Login)</button>
-                </form>
+            <!-- LEFT COLUMN: Farmer Couple Concept Banner Panel (Desktop Layout Only) -->
+            <div class="col-md-6 d-none d-md-flex left-banner flex-column justify-content-end p-5 text-start position-relative">
+                
+                <!-- Bottom Aligned Glassmorphism Narrative Context Block -->
+                <div class="position-relative p-4 rounded-3 text-white mb-4 shadow" style="background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(5px); max-width: 520px; z-index: 2;">
+                    <h1 class="fw-bold mb-1 d-flex align-items-center gap-2" style="font-size: 32px;">
+                        <i class="fa-solid fa-tractor text-warning"></i> Agro-Rental Hub
+                    </h1>
+                    <h3 class="fw-semibold text-warning mb-2" style="font-size: 18px;">"आधुनिक तंत्रज्ञानाची साथ, प्रगतीचा नवा हात!"</h3>
+                    <p class="mb-0 small opacity-90" style="line-height: 1.5;">
+                        जेव्हा कष्टाला मिळते आधुनिक तंत्रज्ञानाची जोड, तेव्हाच फुलते सोन्यासारखं पीक. शेतकरी दांपत्याच्या मेहनतीला डिजिटल युगाची साथ देऊन आम्ही आणली आहेत आधुनिक शेती अवजारे, आता थेट तुमच्या मोबाईलवर!
+                    </p>
+                </div>
+
+                <!-- Footer Localization Watermark Strips -->
+                <div class="position-absolute bottom-0 start-0 w-100 p-2 text-center text-white-50 small" style="background: rgba(0,0,0,0.4); z-index: 2; font-size: 12px;">
+                    माझा बळीराजा, माझी प्रगती • कोल्हापूर, Maharashtra • प्रताप गोरल 
+                </div>
             </div>
 
-            <div class="tab-pane fade" id="pills-register" role="tabpanel">
-                <form id="registerForm" novalidate>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblFullName">पूर्ण नाव</label>
-                        <input type="text" class="form-control" id="regName" required placeholder="उदा. प्रताप गोराळ">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblMobile">मोबाईल नंबर</label>
-                        <input type="tel" class="form-control" id="regPhone" maxlength="10" required placeholder="9876543210">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblEmail">ईमेल पत्ता</label>
-                        <input type="email" class="form-control" id="regEmail" required placeholder="example@gmail.com">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" data-auth-key="lblPassword">पासवर्ड</label>
-                        <input type="password" class="form-control" id="regPassword" minlength="6" required placeholder="किमान ६ अक्षरे">
-                    </div>
+            <!-- RIGHT COLUMN: Authentication Form Box Module with Vertical Auto Scroll -->
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-white py-5 position-relative" style="overflow-y: auto; max-height: 100vh;">
+                
+                <!-- Card Container Wrapper: Height and internal text density enhanced -->
+                <div class="auth-container border border-1 border-light-subtle rounded-4 p-5 py-sm-5 shadow-sm bg-white">
                     
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold d-block" data-auth-key="lblSelectRole">तुमचा रोल निवडा</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="userRole" id="roleFarmer" value="Farmer" checked>
-                            <label class="form-check-label" for="roleFarmer" data-auth-key="optFarmer">मी शेतकरी आहे (Farmer)</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="userRole" id="roleVendor" value="Vendor">
-                            <label class="form-check-label" for="roleVendor" data-auth-key="optVendor">मी यंत्र मालक आहे (Vendor)</label>
-                        </div>
+                    <!-- BRAND HEADER -->
+                    <div class="text-center mb-5">
+                        <i class="fa-solid fa-tractor fa-3x text-success d-md-none mb-2"></i>
+                        <h2 class="fw-extrabold text-success display-4 mb-2" style="font-weight: 800;">Agro-Rental</h2>
+                        <p class="text-muted fw-bold fs-5" data-auth-key="authSubTitle">आपले खाते लॉग इन करा किंवा नवीन खाते तयार करा</p>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm" data-auth-key="btnRegisterSubmit">नवीन खाते बनवा (Register)</button>
-                </form>
+                    <!-- LOGIN / REGISTER TABS NAVIGATION -->
+                    <ul class="nav nav-pills nav-justified mb-5 shadow-sm rounded-3 p-1 bg-light" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" data-auth-key="tabLoginHeader">लॉगिन</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab" data-auth-key="tabRegisterHeader">रजिस्टर</button>
+                        </li>
+                    </ul>
+
+                    <!-- FORMS CONTAINER -->
+                    <div class="tab-content" id="pills-tabContent">
+                        
+                        <!-- A. LOGIN FORM SUB-MODULE -->
+                        <div class="tab-pane fade show active" id="pills-login" role="tabpanel">
+                            <form id="loginForm">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblEmail">ईमेल पत्ता</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-envelope"></i></span>
+                                        <input type="email" class="form-control border-start-0 bg-light-focus py-3" id="loginEmail" required placeholder="example@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblPassword">पासवर्ड</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-lock"></i></span>
+                                        <input type="password" class="form-control border-start-0 py-3" id="loginPassword" required placeholder="******">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 fw-bold py-3 fs-4 shadow shadow-sm" data-auth-key="btnLoginSubmit">प्रवेश करा (Login)</button>
+                            </form>
+                        </div>
+
+                        <!-- B. REGISTER FORM SUB-MODULE -->
+                        <div class="tab-pane fade" id="pills-register" role="tabpanel">
+                            <form id="registerForm" novalidate>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblFullName">पूर्ण नाव</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-user"></i></span>
+                                        <input type="text" class="form-control border-start-0 py-3" id="regName" required placeholder="उदा. प्रताप गोराळ">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblMobile">मोबाईल नंबर</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-phone"></i></span>
+                                        <input type="tel" class="form-control border-start-0 py-3" id="regPhone" maxlength="10" required placeholder="9876543210">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblEmail">ईमेल पत्ता</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-envelope"></i></span>
+                                        <input type="email" class="form-control border-start-0 py-3" id="regEmail" required placeholder="example@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-dark" data-auth-key="lblPassword">पासवर्ड</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa-solid fa-lock"></i></span>
+                                        <input type="password" class="form-control border-start-0 py-3" id="regPassword" minlength="6" required placeholder="किमान ६ अक्षरे">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-5 bg-light p-4 rounded-3 border shadow-sm">
+                                    <label class="form-label fw-bold d-block mb-3 fs-5" data-auth-key="lblSelectRole">तुमचा रोल निवडा</label>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="userRole" id="roleFarmer" value="Farmer" checked>
+                                        <label class="form-check-label fw-bold mb-0 fs-6" for="roleFarmer" data-auth-key="optFarmer">मी शेतकरी आहे (Farmer)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="userRole" id="roleVendor" value="Vendor">
+                                        <label class="form-check-label fw-bold mb-0 fs-6" for="roleVendor" data-auth-key="optVendor">मी यंत्र मालक आहे (Vendor)</label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100 fw-bold py-3 fs-4 shadow shadow-sm" data-auth-key="btnRegisterSubmit">नवीन खाते बनवा (Register)</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- BACK TO HOME SCREEN ACTION LINK -->
+                    <div class="text-center mt-5">
+                        <a href="index.html" class="text-decoration-none text-success fw-bold fs-5" data-auth-key="lnkBackToHome"><i class="fa-solid fa-arrow-left me-1"></i> मुख्य पानावर परत जा</a>
+                    </div>
+
+                </div>
             </div>
 
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="index.html" class="text-decoration-none text-success small fw-semibold" data-auth-key="lnkBackToHome"><i class="fa-solid fa-arrow-left me-1"></i> मुख्य पानावर परत जा</a>
         </div>
     </div>
 
+    <!-- Bootstrap 5 JS Bundle Architecture Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- TRANSLATION RIG ENGINE LOGIC -->
     <script>
         const authTranslations = {
             en: {
@@ -159,7 +240,6 @@
             }
         };
 
-        // Live localization handler switches app dialect dynamically
         window.changeAuthLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 
@@ -171,13 +251,13 @@
             });
         };
 
-        // DOM Initial Execution Binding
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeAuthLanguage(savedLang);
         });
     </script>
     
+    <!-- FIREBASE AUTH BINDING LAYER -->
     <script type="module" src="auth.js"></script>
 </body>
 </html>
