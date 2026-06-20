@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agro-Rental Hub - Farmer Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link class="rtl" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .dashboard-nav {
             background-color: #1e7e34;
@@ -48,6 +48,7 @@
 </head>
 <body>
 
+    <!-- 1. TOP NAVBAR SECTION WITH MOBILE TOGGLE -->
     <nav class="navbar navbar-expand-lg navbar-dark dashboard-nav sticky-top shadow-sm">
         <div class="container-fluid px-4">
             <button class="navbar-toggler d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,9 +75,11 @@
         </div>
     </nav>
 
+    <!-- 2. MAIN LAYOUT AND CORE CONTAINER -->
     <div class="container-fluid">
         <div class="row">
             
+            <!-- SIDEBAR NAVIGATION PANEL WITH MOBILE RESPONSIVE COLLAPSE -->
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse flex-column bg-white">
                 <div class="position-sticky">
                     <a href="#" class="nav-link-custom active" id="linkBrowse" data-farm-key="sideBrowse"><i class="fa-solid fa-magnifying-glass me-2"></i>यंत्रे शोधा</a>
@@ -84,8 +87,10 @@
                 </div>
             </nav>
 
+            <!-- MAIN CONTENT DISPLAY MODULE -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
                 
+                <!-- LIVE REAL-TIME AGRI WEATHER FEED WIDGET -->
                 <div class="card border-0 shadow-sm rounded-3 mb-4 text-white" style="background: linear-gradient(135deg, #2e7d32, #155724);">
                     <div class="card-body d-flex align-items-center justify-content-between py-3">
                         <div>
@@ -99,27 +104,20 @@
                     </div>
                 </div>
 
+                <!-- DYNAMIC DASHBOARD HEADER WRAPPER -->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 fw-bold text-dark" id="dashTitle" data-farm-key="dashTitle">उपलब्ध शेती अवजारे</h1>
                     <p class="text-muted mb-0" id="welcomeUser"></p>
                 </div>
 
+                <!-- PRODUCT FEED MACHINERY DISPLAY GRID WITH REAL-TIME VALIDATION SLOTS -->
                 <div class="row g-4" id="machineryGrid">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card machine-card-dash h-100 shadow-sm">
-                            <div class="img-placeholder"><i class="fa-solid fa-tractor fa-3x text-success"></i></div>
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">John Deere 5050 D</h5>
-                                <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1"></i> कोल्हापूर (Kolhapur)</p>
-                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                    <span class="fw-bold text-success">₹800 / hr</span>
-                                    <button class="btn btn-success btn-sm px-3 fw-bold" data-farm-key="btnBook" data-bs-toggle="modal" data-bs-target="#bookingModal">बुक करा</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-12 text-center text-muted py-4">
+                        <i class="fa-solid fa-spinner fa-spin me-2"></i> अवजारे लोड होत आहेत, कृपया थांबा...
                     </div>
                 </div>
 
+                <!-- USER ACTIVE BOOKINGS HISTORICAL DATATABLE -->
                 <div id="myBookingsSection" class="d-none mt-4">
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-body p-0">
@@ -149,9 +147,10 @@
                     </div>
                 </div>
 
+                <!-- SYSTEM FOOTER BRANDING SECTION -->
                 <footer class="bg-dark text-white py-4 mt-5 rounded-3 shadow-sm">
                     <div class="container text-center">
-                        <p class="mb-2 fw-semibold" data-farm-key="footerText">Agro-Rental Hub - शेतकरी आणि यंत्रधारकांना जोडणारा डिजिटल प्लॅटफॉर्म</p>
+                        <p class="mb-2 fw-semibold" data-farm-key="footerText">Agro-Rental Hub - शेतकरी आणि यंत्रधारकांना जोडणारा डिजिटल評लॅटफॉर्म</p>
                         <p class="small text-muted mb-0" data-farm-key="footerCopy">© 2026 सर्व हक्क सुरक्षित. कोल्हापूर, महाराष्ट्र.</p>
                     </div>
                 </footer>
@@ -160,6 +159,7 @@
         </div>
     </div>
 
+    <!-- 3. INTERACTIVE TRANSACTION BOOKING DIALOG MODAL -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -188,6 +188,7 @@
         </div>
     </div>
 
+    <!-- 4. VENDOR TRANSACTION INVOICE BILL RECEIPT MODAL -->
     <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
@@ -233,8 +234,10 @@
         </div>
     </div>
 
+    <!-- Bootstrap 5 JS Bundle Architecture Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- INLINE LOCALE TRANSLATION ENGINE CONFIGURATIONS -->
     <script>
         const farmerTranslations = {
             en: {
@@ -305,7 +308,7 @@
             }
         };
 
-        // State Machine Interface for Live Dynamic Layout Translations
+        // Switch application language context based on localized selections
         window.changeFarmerLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 

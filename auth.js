@@ -1,26 +1,63 @@
 /**
  * Agro-Rental Hub - Authentication & User Registration Logic
- * Integrates Firebase Auth and Firestore Database
+ * Integrates Firebase Auth and Firestore Database with explicit client-side validation setup
  */
 
 import { auth, db } from "./config.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// --- 1. USER REGISTRATION (SIGN UP) LOGIC ---
+// --- 1. USER REGISTRATION (SIGN UP) LOGIC WITH CLIENT-SIDE VALIDATION ---
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Stop default form redirection
 
         // Fetch inputs from the registration form fields
-        const name = document.getElementById("regName").value;
-        const phone = document.getElementById("regPhone").value;
-        const email = document.getElementById("regEmail").value;
+        const name = document.getElementById("regName").value.trim();
+        const phone = document.getElementById("regPhone").value.trim();
+        const email = document.getElementById("regEmail").value.trim();
         const password = document.getElementById("regPassword").value;
-        const role = document.querySelector('input[name="userRole"]:checked').value;
+        const roleElement = document.querySelector('input[name="userRole"]:checked');
 
+        // --- STAGE 1: LOGICAL CLIENT VALIDATION RUNS ---
+
+        if (name === "") {
+            alert("कृपया तुमचे पूर्ण नाव टाका!");
+            return;
+        }
+
+        // 1. Precise Email layout structural verification rules
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("कृपया एक वैध ईमेल आयडी प्रविष्ट करा! (उदा. pratap@gmail.com)");
+            document.getElementById("regEmail").focus();
+            return;
+        }
+
+        // 2. Strict 10-digit numeric digits length limits enforcement
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobileRegex.test(phone)) {
+            alert("कृपया वैध १० अंकी मोबाईल नंबर टाका! अक्षरे किंवा स्पेस चालणार नाहीत.");
+            document.getElementById("regPhone").focus();
+            return;
+        }
+
+        // 3. Mandatory password character length check
+        if (password.length < 6) {
+            alert("सुरक्षेसाठी पासवर्ड किमान ६ अक्षरे किंवा अंकांचा असावा!");
+            document.getElementById("regPassword").focus();
+            return;
+        }
+
+        if (!roleElement) {
+            alert("कृपया तुमचा रोल निवडा!");
+            return;
+        }
+        const role = roleElement.value;
+
+        // --- STAGE 2: EXECUTE FIREBASE WRITES AND PROFILE STORAGE ---
         try {
             // Register user in Firebase Authentication database
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -36,14 +73,18 @@ if (registerForm) {
                 createdAt: new Date()
             });
 
-            alert("Account created successfully! Redirecting...");
+            alert("खाते यशस्वीरित्या तयार झाले आहे! डॅशबोर्डवर रीडायरेक्ट करत आहोत...");
             
             // Send user to their corresponding panel workspace
             redirectUserBasedOnRole(role);
 
         } catch (error) {
             console.error("Registration Error:", error.message);
-            alert("Error creating account: " + error.message);
+            if (error.code === "auth/email-already-in-use") {
+                alert("हा ईमेल आयडी आधीच नोंदणीकृत आहे! कृपया दुसरा ईमेल वापरा.");
+            } else {
+                alert("नोंदणी अयशस्वी झाली: " + error.message);
+            }
         }
     });
 }
@@ -56,7 +97,7 @@ if (loginForm) {
         e.preventDefault();
 
         // Fetch input credentials from the login form fields
-        const email = document.getElementById("loginEmail").value;
+        const email = document.getElementById("loginEmail").value.trim();
         const password = document.getElementById("loginPassword").value;
 
         try {
@@ -73,12 +114,12 @@ if (loginForm) {
                 // Dynamically route the user depending on recorded role string
                 redirectUserBasedOnRole(userData.role);
             } else {
-                alert("No profile data found for this user inside Firestore!");
+                alert("फायरस्टोअरमध्ये या प्रोफाइलचा कोणताही डेटा सापडला नाही!");
             }
 
         } catch (error) {
             console.error("Login Error:", error.message);
-            alert("Invalid credentials or login error: " + error.message);
+            alert("अवैध क्रेडेंशियल्स किंवा लॉगिन त्रुटी: " + error.message);
         }
     });
 }

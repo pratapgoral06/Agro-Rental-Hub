@@ -73,11 +73,12 @@
             </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
+                
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 fw-bold text-dark" data-vend-key="dashTitle">आलेले बुकिंग रिक्वेस्ट</h1>
                 </div>
 
-                <div class="card shadow-sm border-0 rounded-3">
+                <div class="card shadow-sm border-0 rounded-3 mb-5">
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0 text-center">
@@ -86,11 +87,9 @@
                                         <th scope="col" data-vend-key="thFarmer">शेतकऱ्याचे नाव</th>
                                         <th scope="col" data-vend-key="thMachine">यंत्राचे नाव</th>
                                         <th scope="col" data-vend-key="thDate">तारीख</th>
-                                        <th scope="col" data-vend-key="thHours">एकूण तास</th>
                                         <th scope="col" data-vend-key="thStatus">स्टेटस</th>
                                         <th scope="col" data-vend-key="thWorkStatus">कामाची स्थिती</th>
-                                        <th scope="col" data-vend-key="thAction">कृती (Action)</th>
-                                    </tr>
+                                        <th scope="col">विनंती (Request)</th> <th scope="col" data-vend-key="thAction">कृती (Action)</th> </tr>
                                 </thead>
                                 <tbody id="vendorBookingsTable">
                                     <tr>
@@ -103,8 +102,14 @@
                         </div>
                     </div>
                 </div>
-            </main>
 
+                <div class="d-flex justify-content-between align-items-center pt-4 pb-2 mb-3 border-bottom">
+                    <h2 class="h4 fw-bold text-dark"><i class="fa-solid fa-warehouse me-2"></i>माझी अवजारे व किंमत व्यवस्थापन</h2>
+                </div>
+                <div class="row g-4 mb-4" id="vendorInventoryGrid">
+                    </div>
+
+            </main>
         </div>
     </div>
 
@@ -124,10 +129,19 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold" data-vend-key="lblCategory">प्रकार (Category)</label>
                             <select class="form-select" id="machineCategory" required>
-                                <option value="Tractor">Tractor</option>
-                                <option value="Rotavator">Rotavator</option>
-                                <option value="Drone">Drone</option>
-                                <option value="Harvester">Harvester</option>
+                                <option value="Tractor">Tractor (ट्रॅक्टर)</option>
+                                <option value="Rotavator">Rotavator (रोटाव्हेटर)</option>
+                                <option value="Drone">Drone (ड्रोन फवारणी)</option>
+                                <option value="Harvester">Harvester (कापणी यंत्र)</option>
+                                <option value="Plough">Plough / Mouldboard (नांगर)</option>
+                                <option value="Seed Drill">Seed Drill / Planter (पेरणी यंत्र)</option>
+                                <option value="Power Tiller">Power Tiller (पॉवर टिलर)</option>
+                                <option value="Cultivator">Cultivator (कल्टिव्हेटर मशागत)</option>
+                                <option value="Thresher">Thresher (मळणी यंत्र)</option>
+                                <option value="Agri Sprayer">Agri Sprayer (औषध फवारणी पंप)</option>
+                                <option value="Baler">Baler (काड पेंढा बांधणी यंत्र)</option>
+                                <option value="Sugarcane Cutter">Sugarcane Cutter (ऊस तोडणी यंत्र)</option>
+                                <option value="Water Pump">Water Pump / Tanker (पाणी पंप/टँकर)</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -176,11 +190,32 @@
                         </tbody>
                     </table>
                     <div class="alert alert-success text-center py-2 small fw-bold mb-0">
-                        <i class="fa-solid fa-circle-check me-1"></i> तुम्ही हे बुकिंग मंजूर केले आहे!
+                        <i class="fa-solid fa-circle-check me-1"></i> तुम्ही हे booking मंजूर केले आहे!
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary w-100 fw-bold" data-bs-dismiss="modal">बंद करा</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updatePriceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold" style="font-size: 16px;">किंमत अपडेट करा</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updatePriceForm">
+                        <input type="hidden" id="editMachineId">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">नवीन भाडे प्रति तास (₹)</label>
+                            <input type="number" class="form-control" id="newMachinePrice" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">किंमत बदला (Update)</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -231,7 +266,6 @@
             }
         };
 
-        // Switch application language context based on localized selections
         window.changeVendorLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 
@@ -243,12 +277,12 @@
             });
         };
 
-        // DOM Rendering Setup Rig
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeVendorLanguage(savedLang);
         });
     </script>
+
     <script type="module" src="vendor.js"></script>
 </body>
 </html>

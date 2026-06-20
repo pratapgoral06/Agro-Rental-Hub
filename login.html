@@ -82,14 +82,14 @@
             </div>
 
             <div class="tab-pane fade" id="pills-register" role="tabpanel">
-                <form id="registerForm">
+                <form id="registerForm" novalidate>
                     <div class="mb-3">
                         <label class="form-label fw-semibold" data-auth-key="lblFullName">पूर्ण नाव</label>
                         <input type="text" class="form-control" id="regName" required placeholder="उदा. प्रताप गोराळ">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold" data-auth-key="lblMobile">मोबाईल नंबर</label>
-                        <input type="tel" class="form-control" id="regPhone" required placeholder="9876543210">
+                        <input type="tel" class="form-control" id="regPhone" maxlength="10" required placeholder="9876543210">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold" data-auth-key="lblEmail">ईमेल पत्ता</label>
@@ -97,14 +97,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold" data-auth-key="lblPassword">पासवर्ड</label>
-                        <input type="password" class="form-control" id="regPassword" required placeholder="किमान ६ अक्षरे">
+                        <input type="password" class="form-control" id="regPassword" minlength="6" required placeholder="किमान ६ अक्षरे">
                     </div>
                     
                     <div class="mb-4">
                         <label class="form-label fw-semibold d-block" data-auth-key="lblSelectRole">तुमचा रोल निवडा</label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="userRole" id="roleFarmer" value="Farmer" checked>
-                            <label class="form-check-label" for="roleFarmer" data-auth-key="optFarmer">मी shetkari aahe (Farmer)</label>
+                            <label class="form-check-label" for="roleFarmer" data-auth-key="optFarmer">मी शेतकरी आहे (Farmer)</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="userRole" id="roleVendor" value="Vendor">
@@ -126,9 +126,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        /**
-         * Holds configuration translations for UI dictionary
-         */
         const authTranslations = {
             en: {
                 authSubTitle: "Log in to your account or create a new one",
@@ -162,10 +159,7 @@
             }
         };
 
-        /**
-         * Switches auth screen language dynamically
-         * @param {string} lang - Language code indicator ('en' or 'mr')
-         */
+        // Live localization handler switches app dialect dynamically
         window.changeAuthLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 
@@ -177,7 +171,7 @@
             });
         };
 
-        // Standard event listener to set initial language state on load
+        // DOM Initial Execution Binding
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeAuthLanguage(savedLang);

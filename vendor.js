@@ -6,7 +6,7 @@
  */
 
 import { db, auth } from "./config.js";
-import { collection, addDoc, query, where, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, addDoc, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 let currentVendorUid = null;
@@ -109,34 +109,44 @@ function listenToIncomingBookings() {
                 workStatusText = "-";
             }
 
-            // Interface routing rules based on active authorization profiles
-            let actionHtml = `<span class="text-muted small">-</span>`;
+            // १. विनंती (Request) कॉलमचे लॉजिक: Pending असल्यास बटणे, नाहीतर करंट स्टेटस टेक्स्ट
+            let requestHtml = `<span class="fw-bold text-muted">${booking.status}</span>`;
             if (booking.status === 'Pending') {
-                actionHtml = `
-                    <button class="btn btn-success btn-sm fw-bold me-1" onclick="updateBookingStatus('${bookingId}', 'Accepted')"><i class="fa-solid fa-check"></i></button>
-                    <button class="btn btn-danger btn-sm fw-bold" onclick="updateBookingStatus('${bookingId}', 'Rejected')"><i class="fa-solid fa-xmark"></i></button>
+                requestHtml = `
+                    <button class="btn btn-success btn-sm fw-bold me-1" onclick="updateBookingStatus('${bookingId}', 'Accepted')">Accept</button>
+                    <button class="btn btn-danger btn-sm fw-bold" onclick="updateBookingStatus('${bookingId}', 'Rejected')">Reject</button>
                 `;
-            } else if (booking.status === 'Accepted') {
-                actionHtml = `
-                    <button class="btn btn-outline-dark btn-xs fw-bold py-0 px-2 btn-view-v-invoice" 
+            }
+
+            // २. कृती (Action) कॉलमचे लॉजिक: पावती बटण (फक्त Accepted साठी) आणि डिलीट बटण सर्वांसाठी
+            let actionHtml = "";
+            if (booking.status === 'Accepted') {
+                actionHtml += `
+                    <button class="btn btn-outline-dark btn-xs fw-bold py-1 px-2 btn-view-v-invoice me-2" 
                         data-farmer="${booking.farmerName || 'Farmer'}"
                         data-machine="${booking.machineName}"
                         data-date="${booking.date}"
-                        data-hours="${booking.hours}"
-                        data-total="${booking.totalEstimatedRent}"
+                        data-hours="${booking.hours || 0}"
+                        data-total="${booking.totalEstimatedRent || 0}"
                         style="font-size: 11px;">
                         <i class="fa-solid fa-receipt me-1"></i>पावती पहा
                     </button>
                 `;
             }
+            actionHtml += `
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteBookingRequest('${bookingId}')" title="Delete">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            `;
 
+            // ६ कॉलम्सची अचूक रचना (एकूण तास कॉलम पूर्णपणे काढला आहे)
             row.innerHTML = `
                 <td class="fw-semibold">${booking.farmerName || 'Farmer'}</td>
                 <td>${booking.machineName}</td>
                 <td>${booking.date}</td>
-                <td>${booking.hours} Hrs</td>
                 <td><span class="badge ${badgeClass}">${booking.status}</span></td>
                 <td><span class="badge ${workBadgeClass}">${workStatusText}</span></td>
+                <td>${requestHtml}</td>
                 <td>${actionHtml}</td>
             `;
             bookingsTableBody.appendChild(row);
@@ -180,6 +190,20 @@ window.updateBookingStatus = async function(bookingId, newStatus) {
     } catch (error) {
         console.error("Error updating booking status:", error);
         alert("Failed to update status: " + error.message);
+    }
+};
+
+// --- नवीन जोडल: डिलीट रिक्वेस्ट फंक्शन ---
+window.deleteBookingRequest = async function(bookingId) {
+    if (confirm("तुम्हाला ही बुकिंग रिक्वेस्ट खरोखर डिलीट करायची आहे का?")) {
+        try {
+            const bookingDocRef = doc(db, "bookings", bookingId);
+            await deleteDoc(bookingDocRef);
+            alert("बुकिंग रिक्वेस्ट यशस्वीरित्या डिलीट केली!");
+        } catch (error) {
+            console.error("Error deleting booking:", error);
+            alert("डिलीट करण्यास अपयश आले: " + error.message);
+        }
     }
 };
 
