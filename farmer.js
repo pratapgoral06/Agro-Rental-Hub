@@ -5,7 +5,7 @@
  */
 
 import { db, auth } from "./config.js";
-import { collection, onSnapshot, addDoc, getDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, onSnapshot, addDoc, getDoc, doc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 let currentFarmerUid = null;
@@ -137,6 +137,7 @@ if (bookingForm) {
                 hours: Number(hours),
                 totalEstimatedRent: Number(hours) * selectedMachinePrice,
                 status: "Pending",
+                workStatus: "Pending Work", // Initialize default operational state
                 createdAt: new Date()
             });
 
@@ -190,7 +191,7 @@ if (linkBrowse && linkMyBookings) {
     });
 }
 
-// --- 5. LOAD FARMER'S OWN BOOKINGS FROM FIRESTORE (UPDATED WITH SPINNER CLEARANCE) ---
+// --- 5. LOAD FARMER'S OWN BOOKINGS FROM FIRESTORE (WITH DYNAMIC DATE-BASED WORK STATUS) ---
 function loadFarmerBookings() {
     const farmerBookingsTable = document.getElementById("farmerBookingsTable");
     if (!farmerBookingsTable) return;
@@ -203,23 +204,45 @@ function loadFarmerBookings() {
         farmerBookingsTable.innerHTML = "";
 
         if (snapshot.empty) {
-            farmerBookingsTable.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">तुम्ही अजून एकही बुकिंग केलेले नाही.</td></tr>`;
+            farmerBookingsTable.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">तुम्ही अजून एकही बुकिंग केलेले नाही.</td></tr>`;
             return;
         }
 
+        // Fetch current system date and format as YYYY-MM-DD for precise string comparison
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const formattedToday = `${yyyy}-${mm}-${dd}`;
+
         snapshot.forEach((docSnap) => {
             const booking = docSnap.data();
+            const bookingId = docSnap.id;
             
+            // Map the booking approval status badges
             let badgeClass = "bg-warning text-dark"; // Pending
             if (booking.status === "Accepted") badgeClass = "bg-success";
             if (booking.status === "Rejected") badgeClass = "bg-danger";
 
-            // Conditional template block generation for invoice display permissions
-            let actionButtonHtml = `<span class="badge ${badgeClass}">${booking.status}</span>`;
+            // DYNAMIC DATE LOGIC: Determine work status based on selected booking date milestones
+            let workBadgeClass = "bg-secondary";
+            let workStatusText = "काम प्रलंबित";
+
+            if (booking.date < formattedToday) {
+                // If the booking date has already passed
+                workBadgeClass = "bg-info text-dark";
+                workStatusText = "काम पूर्ण झाले";
+            } else if (booking.date === formattedToday) {
+                // If the booking date is precisely today
+                workBadgeClass = "bg-primary";
+                workStatusText = "काम चालू आहे";
+            }
+
+            // Contextual processing for interactive buttons layout
+            let actionButtonHtml = "";
             if (booking.status === "Accepted") {
                 actionButtonHtml = `
-                    <span class="badge ${badgeClass} mb-1 d-block">${booking.status}</span>
-                    <button class="btn btn-outline-dark btn-xs fw-bold py-0 px-2 btn-view-invoice" 
+                    <button class="btn btn-outline-dark btn-xs fw-bold py-1 px-2 btn-view-invoice" 
                         data-farmer="${booking.farmerName}"
                         data-machine="${booking.machineName}"
                         data-date="${booking.date}"
@@ -229,6 +252,16 @@ function loadFarmerBookings() {
                         <i class="fa-solid fa-receipt me-1"></i>पावती पहा
                     </button>
                 `;
+            } else if (booking.status === "Pending") {
+                actionButtonHtml = `
+                    <button class="btn btn-danger btn-xs fw-bold py-1 px-2 btn-cancel-booking" 
+                        data-booking-id="${bookingId}"
+                        style="font-size: 11px;">
+                        <i class="fa-solid fa-trash-can me-1"></i>रद्द करा
+                    </button>
+                `;
+            } else {
+                actionButtonHtml = `<span class="text-muted small">-</span>`;
             }
 
             const row = document.createElement("tr");
@@ -237,6 +270,8 @@ function loadFarmerBookings() {
                 <td>${booking.date}</td>
                 <td>${booking.hours} Hrs</td>
                 <td class="text-success fw-bold">₹${booking.totalEstimatedRent}</td>
+                <td><span class="badge ${badgeClass}">${booking.status}</span></td>
+                <td><span class="badge ${workBadgeClass}">${workStatusText}</span></td>
                 <td>${actionButtonHtml}</td>
             `;
             farmerBookingsTable.appendChild(row);
@@ -244,6 +279,28 @@ function loadFarmerBookings() {
 
         // Initialize click handling attachments for invoice layouts
         setupInvoiceButtons();
+
+        // Initialize click handling attachments for booking cancel triggers
+        setupCancelButtons();
+    });
+}
+
+// --- 5.1. CANCEL INTERACTIVE EVENT ATTACHMENTS FOR FIRESTORE REMOVAL ---
+function setupCancelButtons() {
+    document.querySelectorAll(".btn-cancel-booking").forEach(button => {
+        button.addEventListener("click", async (e) => {
+            const bookingId = e.currentTarget.getAttribute("data-booking-id");
+            
+            if (confirm("तुम्हाला हे बुकिंग खरोखर रद्द करायचे आहे का?")) {
+                try {
+                    await deleteDoc(doc(db, "bookings", bookingId));
+                    alert("बुकिंग यशस्वीरित्या रद्द करण्यात आले आहे!");
+                } catch (error) {
+                    console.error("Error cancelling booking:", error);
+                    alert("बुकिंग रद्द करता आले नाही: " + error.message);
+                }
+            }
+        });
     });
 }
 
