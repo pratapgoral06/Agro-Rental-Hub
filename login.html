@@ -11,31 +11,51 @@
             background-color: #f4f6f8;
             min-height: 100vh;
         }
-        /* Left Section Banner Configuration with New Local PNG Image */
+        /* Left Section Banner Configuration with Local PNG Image */
         .left-banner {
             background: linear-gradient(135deg, rgba(25, 135, 84, 0.4), rgba(0, 0, 0, 0.45)), 
                         url('image_88681f.png') no-repeat center center;
             background-size: cover;
         }
-        /* Right Section Column: Adjusted to load the farmer background image on mobile views natively */
+        /* Right Section Column Base Configuration */
         .right-column-bg {
             overflow-y: auto; 
             max-height: 100vh;
-            background-color: #white;
+            background-color: #ffffff;
         }
-        /* Mobile responsive override to bring the farmer background behind the form container */
+        /* Mobile Responsive Configurations (100% Clear & Transparent View) */
         @media (max-width: 767.98px) {
             .right-column-bg {
-                background: linear-gradient(135deg, rgba(25, 135, 84, 0.35), rgba(0, 0, 0, 0.5)), 
+                background: linear-gradient(135deg, rgba(21, 87, 36, 0.3), rgba(0, 0, 0, 0.55)), 
                             url('image_88681f.png') no-repeat center center !important;
                 background-size: cover !important;
-                padding-top: 80px !important; /* Safety padding to avoid overlapping the fixed top language switch */
+                padding-top: 90px !important; /* Prevents overlap with floating language selector */
+                padding-bottom: 30px !important;
             }
-            /* Translucent frosted glass look for mobile form container to expose background farmer photo */
+            /* Made the container completely clear and transparent without any heavy blur */
             .auth-container.mobile-glass {
-                background: rgba(255, 255, 255, 0.92) !important;
-                backdrop-filter: blur(8px);
-                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                background: rgba(255, 255, 255, 0.12) !important; /* Completely light transparent overlay */
+                backdrop-filter: blur(0px) !important; /* Removed blur entirely for a crystal clear look */
+                -webkit-backdrop-filter: blur(0px) !important;
+                border: 2px solid rgba(255, 255, 255, 0.4) !important; /* Distinct border for card structure */
+                box-shadow: none !important;
+            }
+            /* Typography visibility adjustments against the clear mobile photography backdrop */
+            .auth-container.mobile-glass .text-dark, 
+            .auth-container.mobile-glass .text-muted,
+            .auth-container.mobile-glass label {
+                color: #ffffff !important;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Injected text shadow for perfect contrast over image */
+            }
+            .auth-container.mobile-glass h2 {
+                color: #ffc107 !important; /* Highlights brand name in thematic gold */
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            }
+            /* Non-active nav tabs typography color inverted for contrast */
+            .auth-container.mobile-glass .nav-pills .nav-link:not(.active) {
+                color: #ffffff !important;
+                background: rgba(255, 255, 255, 0.15);
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
         }
         /* Centered Authentication Form Wrap Constraints */
@@ -54,7 +74,7 @@
             padding: 16px;
             font-size: 20px;
         }
-        /* Floating Locale Selector Coordinates adjusted for safe mobile nesting */
+        /* Floating Locale Selector Coordinates */
         .lang-switch-container {
             position: absolute;
             top: 20px;
@@ -66,7 +86,7 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
-        /* Input elements font weights */
+        /* Form Inputs Font Constraints */
         .form-control {
             font-weight: 600;
         }
@@ -116,10 +136,10 @@
             </div>
 
             <!-- RIGHT COLUMN: Authentication Form Box Module with Dynamic Background Context Switch -->
-            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-white py-5 position-relative right-column-bg">
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center py-5 position-relative right-column-bg">
                 
-                <!-- Card Container Wrapper: Added 'mobile-glass' utility hook for modern responsive blending -->
-                <div class="auth-container border border-1 border-light-subtle rounded-4 p-5 py-sm-5 shadow-sm bg-white mobile-glass">
+                <!-- Card Container Wrapper: Enabled 'mobile-glass' class block for translucent responsive blending -->
+                <div class="auth-container border border-1 border-light-subtle rounded-4 p-4 p-sm-5 shadow-sm bg-white mobile-glass">
                     
                     <!-- BRAND HEADER -->
                     <div class="text-center mb-5">

@@ -3,12 +3,12 @@
  */
 
 import { db, auth } from "./config.js";
-import { collection, onSnapshot, addDoc, doc, query, where, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, onSnapshot, addDoc, doc, query, where, getDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 let currentFarmerUid = null;
 let currentFarmerName = "Farmer";
-let activeMachinePricePerHour = 0; // सिलेक्ट केलेल्या यंत्राची प्रति तास किंमत साठवण्यासाठी
+let activeMachinePricePerHour = 0; 
 let activeMachineId = null;
 let activeMachineName = "";
 
@@ -21,6 +21,7 @@ onAuthStateChanged(auth, async (user) => {
             document.getElementById("welcomeUser").textContent = `रामराम, ${currentFarmerName}!`;
         }
         listenToAvailableMachinery();
+        fetchLiveAgriWeather(); // Initiates real-time weather analytics engine for Kolhapur
     } else {
         window.location.href = "login.html";
     }
@@ -31,36 +32,31 @@ document.getElementById("btnLogout").addEventListener("click", () => {
     signOut(auth).then(() => window.location.href = "login.html");
 });
 
-// --- 2. MACHINERY LISTING WITH STATUS ---
+// --- 2. MACHINERY LISTING (Always open for non-conflicting booking slots) ---
 function listenToAvailableMachinery() {
     const grid = document.getElementById("machineryGrid");
     onSnapshot(collection(db, "machinery"), (mSnap) => {
-        onSnapshot(collection(db, "bookings"), (bSnap) => {
-            grid.innerHTML = "";
-            mSnap.forEach(m => {
-                const machine = m.data();
-                const booking = bSnap.docs.find(b => b.data().machineId === m.id && b.data().status === "Accepted");
-                const isBooked = !!booking;
-                const bDate = isBooked ? booking.data().date : "";
+        grid.innerHTML = "";
+        mSnap.forEach(m => {
+            const machine = m.data();
 
-                const card = document.createElement("div");
-                card.className = "col-md-6 col-lg-4";
-                card.innerHTML = `
-                    <div class="card machine-card-dash h-100 shadow-sm">
-                        <div class="img-placeholder"><i class="fa-solid fa-tractor fa-3x text-success"></i></div>
-                        <div class="card-body">
-                            <h5 class="fw-bold">${machine.machineName}</h5>
-                            <div class="d-flex justify-content-between align-items-center my-2">
-                                <span class="fw-bold text-success">₹${machine.pricePerHour} / तास</span>
-                                <span class="badge ${isBooked ? 'bg-danger' : 'bg-success'}">${isBooked ? 'Booked: ' + bDate : 'Available'}</span>
-                            </div>
-                            <button class="btn btn-success w-100" ${isBooked ? 'disabled' : ''} onclick="openBookingModal('${m.id}', '${machine.machineName}', ${machine.pricePerHour})">
-                                ${isBooked ? 'उपलब्ध नाही' : 'बुक करा'}
-                            </button>
+            const card = document.createElement("div");
+            card.className = "col-md-6 col-lg-4";
+            card.innerHTML = `
+                <div class="card machine-card-dash h-100 shadow-sm">
+                    <div class="img-placeholder"><i class="fa-solid fa-tractor fa-3x text-success"></i></div>
+                    <div class="card-body">
+                        <h5 class="fw-bold">${machine.machineName}</h5>
+                        <div class="d-flex justify-content-between align-items-center my-2">
+                            <span class="fw-bold text-success">₹${machine.pricePerHour} / तास</span>
+                            <span class="badge bg-success">Available</span>
                         </div>
-                    </div>`;
-                grid.appendChild(card);
-            });
+                        <button class="btn btn-success w-100" onclick="openBookingModal('${m.id}', '${machine.machineName}', ${machine.pricePerHour})">
+                            बुक करा
+                        </button>
+                    </div>
+                </div>`;
+            grid.appendChild(card);
         });
     });
 }
@@ -102,22 +98,40 @@ function loadFarmerBookings() {
 }
 
 // --- 4. GLOBAL FUNCTIONS FOR UI & DYNAMIC CALCULATION ---
-window.openBookingModal = (id, name, price) => {
+window.openBookingModal = async (id, name, price) => {
     activeMachineId = id;
     activeMachineName = name;
-    activeMachinePricePerHour = Number(price); // भाडे नंबर फॉरमॅट मध्ये सेट केले
+    activeMachinePricePerHour = Number(price);
 
-    // मॉडेल ओपन होताना इनपुट १ वर सेट करणे जेणेकरून सुरुवातीलाच भाडे दिसेल
+    const dateInput = document.getElementById("bookingDate");
     const hoursInput = document.getElementById("bookingHours");
     const totalDisplay = document.getElementById("estimatedCost");
-    
+    const errorMsg = document.getElementById("bookingDateError");
+    const confirmBtn = document.getElementById("btnConfirmBooking");
+
+    if (dateInput) dateInput.value = "";
+    if (errorMsg) errorMsg.classList.add("d-none");
+    if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.classList.replace("btn-secondary", "btn-success");
+    }
     if (hoursInput) hoursInput.value = "1"; 
     if (totalDisplay) totalDisplay.textContent = "₹" + activeMachinePricePerHour;
+
+    window.currentSelectedMachineBookedDates = [];
+    try {
+        const q = query(collection(db, "bookings"), where("machineId", "==", id), where("status", "==", "Accepted"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            window.currentSelectedMachineBookedDates.push(doc.data().date);
+        });
+    } catch (err) {
+        console.error("Error fetching historical calendar registries:", err);
+    }
 
     new bootstrap.Modal(document.getElementById("bookingModal")).show();
 };
 
-// शेतकरी जेव्हा तासांचे इनपुट बदलेल (टाईप करेल) तेव्हा रिअल-टाईम कॅल्क्युलेशन
 const hoursInputField = document.getElementById("bookingHours");
 if (hoursInputField) {
     hoursInputField.addEventListener("input", () => {
@@ -162,7 +176,6 @@ if (confirmBookingForm) {
             alert("बुकिंग रिक्वेस्ट व्हेंडरकडे यशस्वीरित्या पाठवली आहे!");
             confirmBookingForm.reset();
 
-            // मॉडEL ऑटोमॅटिक क्लोज करणे
             const modalElement = document.getElementById("bookingModal");
             const modal = bootstrap.Modal.getInstance(modalElement);
             if (modal) modal.hide();
@@ -197,3 +210,65 @@ document.getElementById("linkBrowse").addEventListener("click", () => {
     document.getElementById("machineryGrid").classList.remove("d-none");
     document.getElementById("myBookingsSection").classList.add("d-none");
 });
+
+// --- 7. LIVE AGRI WEATHER FEED LOGIC (KOLHAPUR REGION) ---
+async function fetchLiveAgriWeather() {
+    const tempDisplay = document.getElementById("weatherTemp");
+    const statusDisplay = document.getElementById("weatherStatus");
+    const iconDisplay = document.getElementById("weatherIcon");
+
+    // Geographic geo-coordinates parameters assigned for Kolhapur region
+    const lat = "16.7050";
+    const lon = "74.2433";
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Weather API pipeline connectivity hold");
+        
+        const data = await response.json();
+        const current = data.current_weather;
+        
+        if (tempDisplay) {
+            tempDisplay.textContent = `${Math.round(current.temperature)}°C`;
+        }
+
+        let weatherText = "स्वच्छ आकाश";
+        let weatherIconHtml = `<i class="fa-solid fa-sun text-warning"></i>`;
+        const code = current.weathercode;
+
+        // Map standard meteorology codes to regional vernacular string layouts
+        if (code === 0) {
+            weatherText = "स्वच्छ आकाश";
+            weatherIconHtml = `<i class="fa-solid fa-sun text-warning"></i>`;
+        } else if ([1, 2, 3].includes(code)) {
+            weatherText = "आंशिक ढगाळ";
+            weatherIconHtml = `<i class="fa-solid fa-cloud-sun text-light"></i>`;
+        } else if ([45, 48].includes(code)) {
+            weatherText = "धुके आहे";
+            weatherIconHtml = `<i class="fa-solid fa-smog text-secondary"></i>`;
+        } else if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+            weatherText = "पाऊस पडत आहे 🌧️";
+            weatherIconHtml = `<i class="fa-solid fa-cloud-showers-heavy text-info"></i>`;
+        } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+            weatherText = "बर्फवृष्टी (गारपीट)";
+            weatherIconHtml = `<i class="fa-solid fa-snowflake text-light"></i>`;
+        } else if ([95, 96, 99].includes(code)) {
+            weatherText = "वादळी पाऊस ⛈️";
+            weatherIconHtml = `<i class="fa-solid fa-cloud-bolt text-danger"></i>`;
+        }
+
+        if (statusDisplay) {
+            statusDisplay.textContent = weatherText;
+        }
+        if (iconDisplay) {
+            iconDisplay.innerHTML = weatherIconHtml;
+        }
+
+    } catch (error) {
+        console.error("Agri-weather telemetry initialization crash:", error);
+        if (statusDisplay) {
+            statusDisplay.textContent = "हवामान ऑफलाइन आहे";
+        }
+    }
+}
