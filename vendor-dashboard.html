@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agro-Rental Hub - Vendor Dashboard</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .vendor-nav {
@@ -38,13 +36,11 @@
 </head>
 <body>
 
-    <!-- 1. TOP NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark vendor-nav sticky-top shadow-sm">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental (Vendor)</a>
             
             <div class="ms-auto d-flex align-items-center">
-                <!-- Language Selector Dropdown -->
                 <div class="dropdown me-3">
                     <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold" type="button" id="vendorLangDropdown" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-globe me-1"></i> Language / भाषा
@@ -55,7 +51,6 @@
                     </ul>
                 </div>
                 
-                <!-- Logout Button -->
                 <button class="btn btn-danger btn-sm fw-bold" id="btnVendorLogout">
                     <i class="fa-solid fa-right-from-bracket me-1"></i> <span data-vend-key="btnLogoutText">लॉगआऊट</span>
                 </button>
@@ -63,11 +58,9 @@
         </div>
     </nav>
 
-    <!-- 2. MAIN LAYOUT CONTAINER -->
     <div class="container-fluid">
         <div class="row">
             
-            <!-- SIDEBAR NAVIGATION -->
             <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse d-md-flex flex-column">
                 <div class="position-sticky">
                     <a href="#" class="nav-link-custom active" data-vend-key="sideManage"><i class="fa-solid fa-list me-2"></i>बुकिंग्ज व्यवस्थापन</a>
@@ -75,17 +68,15 @@
                 </div>
             </nav>
 
-            <!-- MAIN CONTENT AREA -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 fw-bold text-dark" data-vend-key="dashTitle">आलेले बुकिंग रिक्वेस्ट</h1>
                 </div>
 
-                <!-- BOOKING REQUESTS TABLE -->
                 <div class="card shadow-sm border-0 rounded-3">
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
+                            <table class="table table-hover align-middle mb-0 text-center">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" data-vend-key="thFarmer">शेतकऱ्याचे नाव</th>
@@ -93,20 +84,14 @@
                                         <th scope="col" data-vend-key="thDate">तारीख</th>
                                         <th scope="col" data-vend-key="thHours">एकूण तास</th>
                                         <th scope="col" data-vend-key="thStatus">स्टेटस</th>
+                                        <th scope="col" data-vend-key="thWorkStatus">कामाची स्थिती</th>
                                         <th scope="col" data-vend-key="thAction">कृती (Action)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="vendorBookingsTable">
-                                    <!-- Placeholder Row for UI Reference -->
                                     <tr>
-                                        <td class="fw-semibold">आनंद राव (Anand Rao)</td>
-                                        <td>Mahindra Tractor 45 HP</td>
-                                        <td>25 जून 2026</td>
-                                        <td>5 Hrs</td>
-                                        <td><span class="badge bg-warning text-dark" data-vend-key="statusPending">प्रलंबित</span></td>
-                                        <td>
-                                            <button class="btn btn-success btn-sm fw-bold me-1"><i class="fa-solid fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm fw-bold"><i class="fa-solid fa-xmark"></i></button>
+                                        <td colspan="7" class="text-center text-muted py-4">
+                                            <i class="fa-solid fa-spinner fa-spin me-2"></i> बुकिंगचा डेटा लोड होत आहे, कृपया थांबा...
                                         </td>
                                     </tr>
                                 </tbody>
@@ -119,7 +104,6 @@
         </div>
     </div>
 
-    <!-- 3. ADD MACHINERY POP-UP MODAL -->
     <div class="modal fade" id="addMachineModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -153,14 +137,54 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <div class="modal fade" id="vendorInvoiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2"></i>डिजिटल पावती (व्हेंडर रेकॉर्ड)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-3">
+                        <h4 class="fw-bold text-success mb-1"><i class="fa-solid fa-tractor"></i> Agro-Rental Hub</h4>
+                        <p class="text-muted small">व्हेंडर व्यवहार पावती प्रपत्र</p>
+                    </div>
+                    <hr>
+                    <div class="mb-3 small">
+                        <p class="mb-1"><strong>शेतकऱ्याचे नाव:</strong> <span id="vInvFarmerName">--</span></p>
+                        <p class="mb-1"><strong>यंत्राचे नाव:</strong> <span id="vInvMachineName">--</span></p>
+                        <p class="mb-1"><strong>बुकिंग तारीख:</strong> <span id="vInvDate">--</span></p>
+                    </div>
+                    <table class="table table-bordered table-sm small text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>तपशील</th>
+                                <th>एकूण तास</th>
+                                <th>एकूण जमा रक्कम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="vInvMachineDetail" class="fw-semibold">--</td>
+                                <td id="vInvHours">0 Hrs</td>
+                                <td id="vInvTotal" class="text-success fw-bold">₹0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-success text-center py-2 small fw-bold mb-0">
+                        <i class="fa-solid fa-circle-check me-1"></i> तुम्ही हे बुकिंग मंजूर केले आहे!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100 fw-bold" data-bs-dismiss="modal">बंद करा</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Inline Translation Dictionary Script -->
     <script>
-        /**
-         * Language translation configurations for Vendor Dashboard
-         */
         const vendorTranslations = {
             en: {
                 btnLogoutText: "Logout",
@@ -172,6 +196,7 @@
                 thDate: "Date Required",
                 thHours: "Total Hours",
                 thStatus: "Status",
+                thWorkStatus: "Work Status",
                 thAction: "Action",
                 statusPending: "Pending",
                 modalTitle: "Add New Agri Machinery",
@@ -182,6 +207,7 @@
             },
             mr: {
                 btnLogoutText: "लॉगआऊट",
+                sideBrowse: "यंत्रे शोधा",
                 sideManage: "बुकिंग्ज व्यवस्थापन",
                 sideAddMachine: "नवीन यंत्र जोडा",
                 dashTitle: "आलेले बुकिंग रिक्वेस्ट",
@@ -190,6 +216,7 @@
                 thDate: "तारीख",
                 thHours: "एकूण तास",
                 thStatus: "स्टेटस",
+                thWorkStatus: "कामाची स्थिती",
                 thAction: "कृती (Action)",
                 statusPending: "प्रलंबित",
                 modalTitle: "नवीन अवजार जोडा",
@@ -200,10 +227,7 @@
             }
         };
 
-        /**
-         * Switches dashboard language state on click events
-         * @param {string} lang - Chosen language keyword ('en' or 'mr')
-         */
+        // Switch application language context based on localized selections
         window.changeVendorLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 
@@ -215,57 +239,12 @@
             });
         };
 
-        // Initialize display configuration upon full content load
+        // DOM Rendering Init Rig
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeVendorLanguage(savedLang);
         });
     </script>
-    <!-- DIGITAL INVOICE BILL FOR VENDOR -->
-<div class="modal fade" id="vendorInvoiceModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2"></i>डिजिटल पावती (व्हेंडर रेकॉर्ड)</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="text-center mb-3">
-                    <h4 class="fw-bold text-success mb-1"><i class="fa-solid fa-tractor"></i> Agro-Rental Hub</h4>
-                    <p class="text-muted small">व्हेंडर व्यवहार पावती प्रपत्र</p>
-                </div>
-                <hr>
-                <div class="mb-3 small">
-                    <p class="mb-1"><strong>शेतकऱ्याचे नाव:</strong> <span id="vInvFarmerName">--</span></p>
-                    <p class="mb-1"><strong>यंत्राचे नाव:</strong> <span id="vInvMachineName">--</span></p>
-                    <p class="mb-1"><strong>बुकिंग तारीख:</strong> <span id="vInvDate">--</span></p>
-                </div>
-                <table class="table table-bordered table-sm small text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>तपशील</th>
-                            <th>एकूण तास</th>
-                            <th>एकूण जमा रक्कम</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td id="vInvMachineDetail" class="fw-semibold">--</td>
-                            <td id="vInvHours">0 Hrs</td>
-                            <td id="vInvTotal" class="text-success fw-bold">₹0</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="alert alert-success text-center py-2 small fw-bold mb-0">
-                    <i class="fa-solid fa-circle-check me-1"></i> तुम्ही हे बुकिंग मंजूर केले आहे!
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary w-100 fw-bold" data-bs-dismiss="modal">बंद करा</button>
-            </div>
-        </div>
-    </div>
-</div>
     <script type="module" src="vendor.js"></script>
 </body>
 </html>

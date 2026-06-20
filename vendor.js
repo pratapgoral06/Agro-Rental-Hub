@@ -2,6 +2,7 @@
  * Agro-Rental Hub - Vendor Dashboard Logic
  * Handles adding new machinery and updating incoming booking requests status inside Firestore
  * Includes interactive digital invoice preview logs for accepted rental actions
+ * Automatically computes contextual work operational status based on date tracking configurations
  */
 
 import { db, auth } from "./config.js";
@@ -59,19 +60,26 @@ if (addMachineForm) {
     });
 }
 
-// --- 2. LOAD INCOMING BOOKINGS REAL-TIME (WITH VENDOR INVOICE TRIGGER) ---
+// --- 2. LOAD INCOMING BOOKINGS REAL-TIME (WITH AUTOMATIC WORK STATUS RESOLUTION) ---
 function listenToIncomingBookings() {
     const bookingsTableBody = document.getElementById("vendorBookingsTable");
     const q = collection(db, "bookings");
 
     onSnapshot(q, (snapshot) => {
         if (!bookingsTableBody) return;
-        bookingsTableBody.innerHTML = ""; // Clear placeholder row
+        bookingsTableBody.innerHTML = ""; // Clear placeholder rows
 
         if (snapshot.empty) {
-            bookingsTableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">No booking requests found.</td></tr>`;
+            bookingsTableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No booking requests found.</td></tr>`;
             return;
         }
+
+        // Fetch current system date and format it as YYYY-MM-DD for precise string evaluation
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const formattedToday = `${yyyy}-${mm}-${dd}`;
 
         snapshot.forEach((docSnap) => {
             const booking = docSnap.data();
@@ -84,8 +92,24 @@ function listenToIncomingBookings() {
             if (booking.status === "Accepted") badgeClass = "bg-success";
             if (booking.status === "Rejected") badgeClass = "bg-danger";
 
-            // If the booking is pending, show Accept/Reject buttons. 
-            // If accepted, show a "View Receipt" button for the vendor logs.
+            // EVALUATE OPERATIONAL WORK STATUS BASED ON DATE MILISTONES
+            let workBadgeClass = "bg-secondary";
+            let workStatusText = "काम प्रलंबित";
+
+            if (booking.status === "Accepted") {
+                if (booking.date < formattedToday) {
+                    workBadgeClass = "bg-info text-dark";
+                    workStatusText = "काम पूर्ण झाले";
+                } else if (booking.date === formattedToday) {
+                    workBadgeClass = "bg-primary";
+                    workStatusText = "काम चालू आहे";
+                }
+            } else {
+                // Non-accepted transactions retain a completely blank or generic hyphen state
+                workStatusText = "-";
+            }
+
+            // Interface routing rules based on active authorization profiles
             let actionHtml = `<span class="text-muted small">-</span>`;
             if (booking.status === 'Pending') {
                 actionHtml = `
@@ -112,6 +136,7 @@ function listenToIncomingBookings() {
                 <td>${booking.date}</td>
                 <td>${booking.hours} Hrs</td>
                 <td><span class="badge ${badgeClass}">${booking.status}</span></td>
+                <td><span class="badge ${workBadgeClass}">${workStatusText}</span></td>
                 <td>${actionHtml}</td>
             `;
             bookingsTableBody.appendChild(row);
@@ -142,7 +167,6 @@ function setupVendorInvoiceButtons() {
 }
 
 // --- 4. UPDATE BOOKING STATUS (ACCEPT / REJECT) LOGIC ---
-// Exported to window object to make it globally accessible by dynamic HTML click triggers
 window.updateBookingStatus = async function(bookingId, newStatus) {
     try {
         const bookingDocRef = doc(db, "bookings", bookingId);
