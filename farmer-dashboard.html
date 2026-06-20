@@ -48,12 +48,18 @@
 </head>
 <body>
 
-    <!-- 1. TOP NAVBAR -->
+    <!-- 1. TOP NAVBAR SECTION WITH MOBILE TOGGLE -->
     <nav class="navbar navbar-expand-lg navbar-dark dashboard-nav sticky-top shadow-sm">
         <div class="container-fluid px-4">
+            <!-- Responsive Toggle Button for Mobile Devices -->
+            <button class="navbar-toggler d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
             <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-tractor me-2"></i>Agro-Rental (Farmer)</a>
             
             <div class="ms-auto d-flex align-items-center">
+                <!-- Language Selector Dropdown -->
                 <div class="dropdown me-3">
                     <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold" type="button" id="farmerLangDropdown" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-globe me-1"></i> Language / भाषा
@@ -64,29 +70,30 @@
                     </ul>
                 </div>
                 
+                <!-- Authentication Logout Button -->
                 <button class="btn btn-danger btn-sm fw-bold" id="btnLogout">
-                    <i class="fa-solid fa-right-from-bracket me-1"></i> <span data-farm-key="btnLogoutText">लॉगआउट</span>
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> <span data-farm-key="btnLogoutText">लॉगアウト</span>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- 2. MAIN LAYOUT CONTAINER -->
+    <!-- 2. MAIN LAYOUT AND CORE CONTAINER -->
     <div class="container-fluid">
         <div class="row">
             
-            <!-- SIDEBAR NAVIGATION -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse d-md-flex flex-column">
+            <!-- SIDEBAR NAVIGATION PANEL WITH RESPONSIVE COLLAPSE ID -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar p-3 collapse flex-column bg-white">
                 <div class="position-sticky">
                     <a href="#" class="nav-link-custom active" id="linkBrowse" data-farm-key="sideBrowse"><i class="fa-solid fa-magnifying-glass me-2"></i>यंत्रे शोधा</a>
                     <a href="#" class="nav-link-custom" id="linkMyBookings" data-farm-key="sideBookings"><i class="fa-solid fa-list-check me-2"></i>माझे बुकिंग्स</a>
                 </div>
             </nav>
 
-            <!-- MAIN CONTENT AREA -->
+            <!-- MAIN CONTENT DISPLAY MODULE -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4 bg-light">
                 
-                <!-- LIVE AGRI WEATHER WIDGET SECTION -->
+                <!-- LIVE REAL-TIME AGRI WEATHER FEED WIDGET -->
                 <div class="card border-0 shadow-sm rounded-3 mb-4 text-white" style="background: linear-gradient(135deg, #2e7d32, #155724);">
                     <div class="card-body d-flex align-items-center justify-content-between py-3">
                         <div>
@@ -100,12 +107,13 @@
                     </div>
                 </div>
 
+                <!-- DYNAMIC DASHBOARD HEADER WRAPPER -->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 fw-bold text-dark" id="dashTitle" data-farm-key="dashTitle">उपलब्ध शेती अवजारे</h1>
                     <p class="text-muted mb-0" id="welcomeUser"></p>
                 </div>
 
-                <!-- MACHINERY GRID CONTAINER -->
+                <!-- PRODUCT FEED MACHINERY DISPLAY GRID -->
                 <div class="row g-4" id="machineryGrid">
                     <div class="col-md-6 col-lg-4">
                         <div class="card machine-card-dash h-100 shadow-sm">
@@ -122,13 +130,13 @@
                     </div>
                 </div>
 
-                <!-- MY BOOKINGS SECTION -->
+                <!-- USER ACTIVE BOOKINGS HISTORICAL DATATABLE -->
                 <div id="myBookingsSection" class="d-none mt-4">
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
+                                <table class="table table-hover align-middle mb-0 text-center">
+                                    <thead class="table-dark">
                                         <tr>
                                             <th scope="col" data-farm-key="thMachine">यंत्राचे नाव</th>
                                             <th scope="col" data-farm-key="thDate">तारीख</th>
@@ -138,19 +146,27 @@
                                         </tr>
                                     </thead>
                                     <tbody id="farmerBookingsTable">
-                                        <!-- Real-time dynamic entries from farmer.js load here -->
+                                        <!-- Real-time database dynamic records mapped via farmer.js script -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
 
+                <!-- 5. SYSTEM FOOTER BRANDING SECTION -->
+                <footer class="bg-dark text-white py-4 mt-5 rounded-3 shadow-sm">
+                    <div class="container text-center">
+                        <p class="mb-2 fw-semibold" data-farm-key="footerText">Agro-Rental Hub - शेतकरी आणि यंत्रधारकांना जोडणारा डिजिटल प्लॅटफॉर्म</p>
+                        <p class="small text-muted mb-0" data-farm-key="footerCopy">© 2026 सर्व हक्क सुरक्षित. कोल्हापूर, महाराष्ट्र.</p>
+                    </div>
+                </footer>
+
+            </main>
         </div>
     </div>
 
-    <!-- 3. BOOKING POP-UP MODAL -->
+    <!-- 3. INTERACTIVE TRANSACTION BOOKING DIALOG MODAL -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -179,7 +195,7 @@
         </div>
     </div>
 
-    <!-- 4. DIGITAL INVOICE BILL POP-UP MODAL -->
+    <!-- 4. VENDOR TRANSACTION INVOICE BILL RECEIPT MODAL -->
     <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
@@ -225,10 +241,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <!-- Bootstrap 5 JS Bundle Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Inline Translation Dictionary Script -->
+    <!-- INLINE DICTIONARY TRANSLATION ROUTINES -->
     <script>
         const farmerTranslations = {
             en: {
@@ -258,7 +274,9 @@
                 invThHours: "Total Hours",
                 invThTotal: "Total Rent",
                 invAlertStatus: "Transaction approved by vendor!",
-                invBtnClose: "Close"
+                invBtnClose: "Close",
+                footerText: "Agro-Rental Hub - Digital Platform Connecting Farmers & Vendors",
+                footerCopy: "© 2026 All Rights Reserved. Kolhapur, Maharashtra."
             },
             mr: {
                 btnLogoutText: "लॉगआऊट",
@@ -287,10 +305,13 @@
                 invThHours: "एकूण तास",
                 invThTotal: "एकूण भाडे",
                 invAlertStatus: "व्हेंडरद्वारे व्यवहार मंजूर झाला आहे!",
-                invBtnClose: "बंद करा"
+                invBtnClose: "बंद करा",
+                footerText: "Agro-Rental Hub - शेतकरी आणि यंत्रधारकांना जोडणारा डिजिटल प्लॅटफॉर्म",
+                footerCopy: "© 2026 सर्व हक्क सुरक्षित. कोल्हापूर, महाराष्ट्र."
             }
         };
 
+        // State Machine Interface for Live Dynamic Layout Translations
         window.changeFarmerLanguage = function(lang) {
             localStorage.setItem("selectedLang", lang);
 
@@ -312,6 +333,7 @@
             }
         };
 
+        // DOM Setup Initialization Rigs
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selectedLang") || "mr";
             changeFarmerLanguage(savedLang);
