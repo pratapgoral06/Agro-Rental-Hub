@@ -17,6 +17,27 @@
                         url('image_88681f.png') no-repeat center center;
             background-size: cover;
         }
+        /* Right Section Column: Adjusted to load the farmer background image on mobile views natively */
+        .right-column-bg {
+            overflow-y: auto; 
+            max-height: 100vh;
+            background-color: #white;
+        }
+        /* Mobile responsive override to bring the farmer background behind the form container */
+        @media (max-width: 767.98px) {
+            .right-column-bg {
+                background: linear-gradient(135deg, rgba(25, 135, 84, 0.35), rgba(0, 0, 0, 0.5)), 
+                            url('image_88681f.png') no-repeat center center !important;
+                background-size: cover !important;
+                padding-top: 80px !important; /* Safety padding to avoid overlapping the fixed top language switch */
+            }
+            /* Translucent frosted glass look for mobile form container to expose background farmer photo */
+            .auth-container.mobile-glass {
+                background: rgba(255, 255, 255, 0.92) !important;
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            }
+        }
         /* Centered Authentication Form Wrap Constraints */
         .auth-container {
             max-width: 700px;
@@ -29,11 +50,11 @@
         /* Tab Navigation Anchor Configuration with Extra Padding and Bold Text */
         .nav-pills .nav-link {
             color: #198754;
-            font-weight: 800; /* Super bold tabs */
-            padding: 16px;    /* Increased vertical height for tabs */
-            font-size: 20px;   /* Larger tab font size */
+            font-weight: 800;
+            padding: 16px;
+            font-size: 20px;
         }
-        /* Floating Locale Selector Coordinates */
+        /* Floating Locale Selector Coordinates adjusted for safe mobile nesting */
         .lang-switch-container {
             position: absolute;
             top: 20px;
@@ -42,10 +63,10 @@
         }
         /* Form Label Typography Constraints with Enhanced Weight */
         .form-label {
-            font-size: 18px;     /* Increased label size */
+            font-size: 18px;
             margin-bottom: 10px;
         }
-        /* Custom styling to make input text look bold and clear */
+        /* Input elements font weights */
         .form-control {
             font-weight: 600;
         }
@@ -90,15 +111,15 @@
 
                 <!-- Footer Localization Watermark Strips -->
                 <div class="position-absolute bottom-0 start-0 w-100 p-2 text-center text-white-50 small" style="background: rgba(0,0,0,0.4); z-index: 2; font-size: 12px;">
-                    माझा बळीराजा, माझी प्रगती • कोल्हापूर, Maharashtra • प्रताप गोरल 
+                    माझा बळीराजा, माझी प्रगती • कोल्हापूर, Maharashtra
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: Authentication Form Box Module with Vertical Auto Scroll -->
-            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-white py-5 position-relative" style="overflow-y: auto; max-height: 100vh;">
+            <!-- RIGHT COLUMN: Authentication Form Box Module with Dynamic Background Context Switch -->
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-white py-5 position-relative right-column-bg">
                 
-                <!-- Card Container Wrapper: Height and internal text density enhanced -->
-                <div class="auth-container border border-1 border-light-subtle rounded-4 p-5 py-sm-5 shadow-sm bg-white">
+                <!-- Card Container Wrapper: Added 'mobile-glass' utility hook for modern responsive blending -->
+                <div class="auth-container border border-1 border-light-subtle rounded-4 p-5 py-sm-5 shadow-sm bg-white mobile-glass">
                     
                     <!-- BRAND HEADER -->
                     <div class="text-center mb-5">
